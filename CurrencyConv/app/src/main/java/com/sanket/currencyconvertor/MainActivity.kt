@@ -29,11 +29,95 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        spinnerSetup()
+        TextChanged()
 
 
     }
 
+    private fun TextChanged() {
+
+        et_first_conversion.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                try {
+                    getApiResult()
+                } catch (e: Exception) {
+                    Toast.makeText(applicationContext, "Type a value", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Log.d("Main", "Before Text Changed")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d("Main", "OnTextChanged")
+            }
+
+        })
+
+    }
+
+    private fun spinnerSetup() {
+        val spinner: Spinner = findViewById(R.id.spinner_firstConversion)
+        val spinner2: Spinner = findViewById(R.id.spinner_secondConversion)
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.currencies,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            spinner.adapter = adapter
+
+        }
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.currencies2,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            spinner2.adapter = adapter
+
+        }
+
+        spinner.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                baseCurrency = parent?.getItemAtPosition(position).toString()
+                getApiResult()
+            }
+
+        })
+
+        spinner2.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                convertedCurrency = parent?.getItemAtPosition(position).toString()
+                getApiResult()
+            }
+
+        })
+    }
 
     private fun getApiResult() {
         if (et_first_conversion != null && et_first_conversion.text.isNotEmpty() && et_first_conversion.text.isNotBlank()) {
