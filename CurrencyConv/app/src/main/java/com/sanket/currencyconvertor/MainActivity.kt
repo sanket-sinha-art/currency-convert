@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import com.sanket.currencyconvertor.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,11 +25,12 @@ class MainActivity : AppCompatActivity() {
     var baseCurrency = "EUR"
     var convertedCurrency = "USD"
     var rate = 0f
+    private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
         spinnerSetup()
         TextChanged()
 
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun TextChanged() {
 
-        et_first_conversion.addTextChangedListener(object : TextWatcher{
+        binding.etFirstConversion.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 try {
                     getApiResult()
@@ -59,8 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun spinnerSetup() {
-        val spinner: Spinner = findViewById(R.id.spinner_firstConversion)
-        val spinner2: Spinner = findViewById(R.id.spinner_secondConversion)
+
 
         ArrayAdapter.createFromResource(
             this,
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            spinner.adapter = adapter
+            binding.spinnerFirstConversion.adapter = adapter
 
         }
 
@@ -80,11 +81,11 @@ class MainActivity : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            spinner2.adapter = adapter
+            binding.spinnerSecondConversion.adapter = adapter
 
         }
 
-        spinner.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+        binding.spinnerFirstConversion.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        spinner2.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+        binding.spinnerSecondConversion.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
